@@ -1,0 +1,26 @@
+name: Windows - LiteManager
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Start Building...
+    runs-on: windows-2022  # Use Windows 11 environment
+    timeout-minutes: 1440  # Set timeout to 1440 minutes (24 hours)
+
+    steps:
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/chamod12/lm_win-10_github_rdp/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          cmd /c Downloads.bat
+
+      - name: Connect to LiteManager
+        run: cmd /c show.bat
+
+      - name: Time Counter - Run RDP for 24 Hours
+        run: |
+          echo @echo off > timer.bat
+          echo timeout /t 86400 >> timer.bat  # 86400 seconds = 24 hours
+          echo shutdown /s /t 0 >> timer.bat  # Shutdown after 24 hours
+          cmd /c timer.bat
